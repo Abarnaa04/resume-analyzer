@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            margin:0;
+            font-family:Poppins;
+            background: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+        }
+
+        .box{
+            width:100%;
+            max-width:420px;
+            padding:30px;
+            background:rgba(255,255,255,0.08);
+            border-radius:15px;
+            backdrop-filter: blur(12px);
+            text-align:center;
+            box-shadow:0 0 20px rgba(0,229,255,0.15);
+        }
+
+        h2{
+            color:#00e5ff;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:none;
+            border-radius:10px;
+            outline:none;
+            box-sizing:border-box;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#7F00FF;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+            transition:0.3s;
+            margin-top:10px;
+        }
+
+        button:hover{
+            transform:scale(1.03);
+        }
+
+        .msg{
+            color:#ff6b6b;
+            margin-top:10px;
+        }
+
+        a{
+            color:#00e5ff;
+            text-decoration:none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>📝 Create Account</h2>
+
+    {% if message %}
+        <p class="msg">{{ message }}</p>
+    {% endif %}
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            required>
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Enter Email Address"
+            required>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            minlength="6"
+            required>
+
+        <button type="submit">
+            Signup
+        </button>
+
+    </form>
+
+    <p style="margin-top:15px;">
+        Already have an account?
+        <a href="/login">Login</a>
+    </p>
+
+</div>
+
+</body>
+</html>

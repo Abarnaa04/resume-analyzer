@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <style>
+
+    body{
+        background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+        font-family:Poppins;
+        margin:0;
+        color:white;
+    }
+
+    .container{
+        width:90%;
+        max-width:1000px;
+        margin:auto;
+        padding:30px;
+    }
+
+    .profile-card{
+        background:rgba(255,255,255,0.08);
+        backdrop-filter:blur(10px);
+        padding:30px;
+        border-radius:20px;
+    }
+
+    .header{
+        display:flex;
+        align-items:center;
+        gap:25px;
+        flex-wrap:wrap;
+    }
+
+    .profile-pic{
+        width:130px;
+        height:130px;
+        border-radius:50%;
+        object-fit:cover;
+        border:4px solid #00e5ff;
+    }
+
+    .info{
+        flex:1;
+    }
+
+    .info h2{
+        margin:0;
+        color:#00e5ff;
+    }
+
+    .btn{
+        background:#00e5ff;
+        color:black;
+        padding:10px 18px;
+        border:none;
+        border-radius:10px;
+        cursor:pointer;
+        font-weight:bold;
+        margin-top:10px;
+    }
+
+    .section{
+        margin-top:25px;
+    }
+
+    .card{
+        background:rgba(255,255,255,0.08);
+        padding:20px;
+        border-radius:15px;
+        margin-bottom:15px;
+    }
+
+    .card h3{
+        margin-top:0;
+        color:#00e5ff;
+    }
+
+    .settings a{
+        display:block;
+        color:white;
+        text-decoration:none;
+        padding:10px;
+        margin:8px 0;
+        background:rgba(255,255,255,0.08);
+        border-radius:10px;
+    }
+
+    .settings a:hover{
+        background:#00e5ff;
+        color:black;
+    }
+
+    input[type=text]{
+        width:100%;
+        padding:10px;
+        margin:8px 0;
+        border:none;
+        border-radius:8px;
+    }
+
+    input[type=file]{
+        margin-top:10px;
+        color:white;
+    }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="profile-card">
+
+<div class="header">
+
+{% if user.get('profile_pic') %}
+<img src="/{{ user['profile_pic'] }}" class="profile-pic">
+{% else %}
+<img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-pic">
+{% endif %}
+
+<div class="info">
+
+<h2>
+{{ user["profile"]["name"] }}
+</h2>
+
+<p>📧 {{ user["email"] }}</p>
+
+<p>📱 {{ user["profile"]["phone"] if user["profile"]["phone"] else "Not Added" }}</p>
+
+</div>
+
+</div>
+
+<!-- Upload Profile Photo -->
+
+<div class="card">
+
+<h3>📸 Upload Profile Photo</h3>
+
+<form action="/upload_profile"
+      method="POST"
+      enctype="multipart/form-data">
+
+<input type="file" name="photo" required>
+
+<br>
+
+<button class="btn">
+Upload Photo
+</button>
+
+</form>
+
+</div>
+
+<!-- Edit Profile -->
+
+<div class="card">
+
+<h3>✏ Edit Profile</h3>
+
+<form action="/update_profile" method="POST">
+
+<input
+type="text"
+name="name"
+placeholder="Name"
+value="{{ user['profile']['name'] }}"
+>
+
+<input
+type="text"
+name="phone"
+placeholder="Phone Number"
+value="{{ user['profile']['phone'] }}"
+>
+
+<input
+type="text"
+name="address"
+placeholder="Address"
+value="{{ user['profile']['address'] }}"
+>
+
+<input
+type="text"
+name="gender"
+placeholder="Gender"
+value="{{ user['profile']['gender'] }}"
+>
+
+<button class="btn">
+💾 Save Profile
+</button>
+
+</form>
+
+</div>
+
+<div class="section">
+
+<div class="card">
+<h3>📍 Address</h3>
+<p>{{ user["profile"]["address"] if user["profile"]["address"] else "Not Updated" }}</p>
+</div>
+
+<div class="card">
+<h3>🚻 Gender</h3>
+<p>{{ user["profile"]["gender"] if user["profile"]["gender"] else "Not Updated" }}</p>
+</div>
+
+<div class="card">
+<h3>🎓 Education</h3>
+<p>B.Tech Artificial Intelligence & Data Science</p>
+</div>
+
+<div class="card settings">
+
+<h3>⚙ Account Settings</h3>
+
+<a href="/change_password">
+🔑 Change Password
+</a>
+
+<a href="/upload">
+📄 Upload Resume
+</a>
+
+<a href="/dashboard">
+🏠 Dashboard
+</a>
+
+<a href="/logout">
+🚪 Logout
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

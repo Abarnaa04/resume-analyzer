@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Career Buddy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    min-height:100vh;
+}
+
+.container{
+    width:80%;
+    margin:auto;
+    padding-top:30px;
+}
+
+h1{
+    margin-bottom:20px;
+    color:#00e5ff;
+}
+
+.chat-box{
+    height:500px;
+    overflow-y:auto;
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.user{
+    text-align:right;
+    margin:15px;
+    color:#00e5ff;
+    font-weight:bold;
+}
+
+.bot{
+    text-align:left;
+    margin:15px;
+    color:white;
+    line-height:1.8;
+}
+
+.chat-area{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+button{
+    padding:12px 25px;
+    background:#00e5ff;
+    color:black;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.back-btn{
+    display:inline-block;
+    margin-top:20px;
+    color:white;
+    text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 AI Career Buddy</h1>
+
+<div id="chat-box" class="chat-box">
+
+<div class="bot">
+🤖 Hello! I'm your AI Career Buddy.<br><br>
+
+You can ask me about:
+<ul style="margin-left:20px; margin-top:10px;">
+<li>Career Guidance</li>
+<li>Internships</li>
+<li>Projects</li>
+<li>Programming</li>
+<li>Placements</li>
+<li>Resume Building</li>
+<li>Interview Preparation</li>
+<li>Higher Studies</li>
+</ul>
+
+<br>
+How can I help you today?
+</div>
+
+</div>
+
+<div class="chat-area">
+
+<input
+type="text"
+id="message"
+placeholder="Ask anything about career, skills, projects, jobs...">
+
+<button onclick="sendMessage()">
+Send
+</button>
+
+</div>
+
+<a href="/dashboard" class="back-btn">
+⬅ Back to Dashboard
+</a>
+
+</div>
+
+<script>
+
+function sendMessage(){
+
+let msg=document.getElementById("message").value;
+
+if(msg.trim()===""){
+    return;
+}
+
+fetch("/chat",{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/x-www-form-urlencoded"
+    },
+    body:"message="+encodeURIComponent(msg)
+})
+.then(response=>response.json())
+.then(data=>{
+
+    let box=document.getElementById("chat-box");
+
+    box.innerHTML +=
+    "<div class='user'>🧑 " + msg + "</div>";
+
+    box.innerHTML +=
+    "<div class='bot'>🤖 " + data.reply + "</div>";
+
+    document.getElementById("message").value="";
+
+    box.scrollTop = box.scrollHeight;
+
+})
+.catch(error => {
+
+    let box=document.getElementById("chat-box");
+
+    box.innerHTML +=
+    "<div class='bot'>❌ Error connecting to AI.</div>";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

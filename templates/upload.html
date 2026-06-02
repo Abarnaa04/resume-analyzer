@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Resume</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            margin:0;
+            font-family:Poppins;
+            background: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+        }
+
+        .box{
+            width:100%;
+            max-width:420px;
+            padding:25px;
+            background:rgba(255,255,255,0.08);
+            border-radius:15px;
+            backdrop-filter: blur(12px);
+            text-align:center;
+        }
+
+        h2{
+            margin-bottom:15px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin:10px 0;
+            border:none;
+            border-radius:10px;
+            outline:none;
+        }
+
+        button{
+            padding:10px 16px;
+            border:none;
+            border-radius:10px;
+            background:linear-gradient(90deg,#00c6ff,#0072ff);
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+            min-width:140px;
+            transition:0.3s;
+        }
+
+        button:hover{
+            transform:scale(1.05);
+            box-shadow:0 0 12px #00c6ff;
+        }
+
+        p{
+            margin-top:10px;
+            color:#00e5ff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>📤 Upload Resume</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <input type="file" name="resume" required>
+
+        <button>🚀 Upload & Analyze</button>
+
+    </form>
+
+    <p>{{message}}</p>
+
+</div>
+
+</body>
+</html>
