@@ -7,26 +7,23 @@ from werkzeug.utils import secure_filename
 import os
 import json
 
-# ================= LOAD .env =================
-load_dotenv()
-
 # ================= SETUP =================
 os.makedirs("static/profile", exist_ok=True)
 
-app = Flask(__name__)
+load_dotenv()
 
-# 🔐 from .env
-app.secret_key = os.getenv("SECRET_KEY")
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "secret123")
 
 # ================= GROQ API =================
 API_KEY = os.getenv("GROQ_API_KEY")
 
 if not API_KEY:
-    raise ValueError("❌ GROQ_API_KEY missing in .env")
+    raise ValueError("❌ GROQ_API_KEY not set")
 
 client = Groq(api_key=API_KEY)
 
-# ================= DATABASE =================
+# ================= DATABASE (JSON) =================
 USER_FILE = "users.json"
 
 def load_users():
@@ -56,12 +53,14 @@ def signup():
         email = request.form.get('email')
 
         if not username or not password or not email:
-            return render_template("signup.html", message="All fields required ❌")
+            return render_template("signup.html", message="All fields are required ❌")
 
+        # email duplicate check
         for u in users.values():
             if u.get("email") == email:
-                return render_template("signup.html", message="Email already exists ❌")
+                return render_template("signup.html", message="Email already registered ❌")
 
+        # username check
         if username in users:
             return render_template("signup.html", message="Username already exists ❌")
 
@@ -108,13 +107,14 @@ def dashboard():
     if 'user' not in session:
         return redirect('/login')
 
-    user = users.get(session['user'])
+    username = session['user']
+    user = users.get(username)
 
     if not user:
         session.clear()
         return redirect('/login')
 
-    return render_template("dashboard.html", user=user)
+    return render_template("dashboard.html", user=user, username=username)
 
 # ================= PROFILE =================
 @app.route('/profile')
@@ -123,9 +123,11 @@ def profile():
     if 'user' not in session:
         return redirect('/login')
 
-    return render_template("profile.html", user=users.get(session['user']))
+    user = users.get(session['user'])
 
-# ================= UPLOAD PROFILE =================
+    return render_template("profile.html", user=user)
+
+# ================= UPLOAD PROFILE PIC =================
 @app.route('/upload_profile', methods=['POST'])
 def upload_profile():
 
@@ -134,13 +136,16 @@ def upload_profile():
 
     file = request.files.get('photo')
 
-    if file and file.filename:
-        filename = secure_filename(file.filename)
-        path = os.path.join("static/profile", filename)
-        file.save(path)
+    if not file or file.filename == "":
+        return redirect('/profile')
 
-        users[session['user']]['profile_pic'] = path
-        save_users(users)
+    filename = secure_filename(file.filename)
+    path = os.path.join("static/profile", filename)
+
+    file.save(path)
+
+    users[session['user']]['profile_pic'] = path
+    save_users(users)
 
     return redirect('/profile')
 
@@ -190,11 +195,11 @@ def upload():
             return redirect('/analyze')
 
         except Exception as e:
-            return render_template("upload.html", message=str(e))
+            return render_template("upload.html", message=f"Error: {str(e)}")
 
     return render_template("upload.html")
 
-# ================= ANALYZE =================
+# ================= ANALYZE RESUME =================
 @app.route('/analyze')
 def analyze():
 
@@ -207,14 +212,15 @@ def analyze():
         return redirect('/upload')
 
     prompt = f"""
-You are a career AI advisor.
+You are a professional AI career advisor.
 
-Analyze resume:
-- Skills
-- Missing Skills
-- ATS Score
-- Job Roles
-- Improvements
+Analyze this resume:
+
+1. Skills
+2. Missing Skills
+3. ATS Score (0-100)
+4. Job Roles
+5. Improvement Tips
 
 Resume:
 {resume[:2000]}
@@ -244,13 +250,15 @@ def chat():
     msg = request.form.get("message")
 
     prompt = f"""
+You are a friendly AI career mentor.
+
 Resume:
 {resume[:2000]}
 
-User:
+User question:
 {msg}
 
-Answer simply.
+Give simple clear answers for students.
 """
 
     try:
@@ -262,7 +270,7 @@ Answer simply.
         return jsonify({"reply": response.choices[0].message.content})
 
     except Exception as e:
-        return jsonify({"reply": str(e)})
+        return jsonify({"reply": f"AI error: {str(e)}"})
 
 # ================= CHANGE PASSWORD =================
 @app.route('/change_password', methods=['GET', 'POST'])
@@ -306,5 +314,4 @@ def logout():
 
 # ================= RUN =================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(debug=True)
