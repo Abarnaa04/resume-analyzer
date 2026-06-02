@@ -34,5 +34,17 @@
             "address": "",
             "gender": ""
         }
+    },
+    "Abarnaa": {
+        "password": "scrypt:32768:8:1$dMttPBzwgWVc14ZZ$4bca29a853baf89de88d574b2e919c2aa695698be558ca7de89232d03f4fa1e56cd92ca8bfb5976a3dcac20aef1de3897fc4055de7099998c80d8466ae06ca86",
+        "email": "abarnaa361@gmail.com",
+        "profile_pic": "static/profile/default.png",
+        "resume_text": "",
+        "profile": {
+            "name": "Abarnaa",
+            "phone": "",
+            "address": "",
+            "gender": ""
+        }
     }
 }
